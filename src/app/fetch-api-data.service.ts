@@ -89,6 +89,16 @@ export class FetchApiDataService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
+  // User login
+  public userLogin(userDetails: {
+    username: string;
+    password: string;
+  }): Observable<any> {
+    return this.http
+      .post<any>(`${apiUrl}login`, userDetails)
+      .pipe(catchError(this.handleError));
+  }
+
   // Create a user (Register)
   public userRegistration(userDetails: {
     username: string;
@@ -164,9 +174,18 @@ export class FetchApiDataService {
     let errorMessage = 'Something went wrong; please try again later.';
 
     if (error.error instanceof ErrorEvent) {
+      // Client-side error
       errorMessage = error.error.message;
+    } else if (error.error && typeof error.error === 'object') {
+      // Server-side error that returns an object
+      if (error.error.message) {
+        errorMessage = error.error.message;
+      } else {
+        errorMessage = JSON.stringify(error.error); // Convert object to string
+      }
     } else {
-      errorMessage = error.error;
+      // Generic fallback
+      errorMessage = error.error || errorMessage;
     }
 
     return throwError(() => new Error(errorMessage));

@@ -35,7 +35,6 @@ import { FetchApiDataService } from '../fetch-api-data.service';
   ],
 })
 export class UserRegistrationFormComponent {
-  // Use FormGroup instead of @Input()
   registrationForm: FormGroup;
 
   private fetchApiData = inject(FetchApiDataService);
