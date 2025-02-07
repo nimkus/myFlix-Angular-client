@@ -1,0 +1,27 @@
+.profile-card {
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    margin-top: 10px;
+    margin-left: 10px;
+    max-width: fit-content;
+  }
+}
+
+.fav-movies-card {
+  margin-top: 30px;
+  max-width: 700px;
+  margin: auto;
+  padding: 20px;
+}

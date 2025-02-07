@@ -1,0 +1,32 @@
+.movie-card-container {
+  margin: 50px auto;
+
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(250px, 1fr)
+  ); // Responsive grid
+  gap: 20px;
+  max-width: 60vw;
+}
+
+.movie-card {
+  display: flex;
+  justify-content: space-between;
+
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: 5%;
+  }
+
+  mat-card-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    mat-icon {
+      margin-right: 5px;
+    }
+  }
+}

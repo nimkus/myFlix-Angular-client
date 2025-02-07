@@ -1,45 +1,27 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
-// Material Design
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatCardModule } from '@angular/material/card';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Router } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
-import { ReactiveFormsModule } from '@angular/forms';
-
-// App Components
-import { UserRegistrationFormComponent } from './user-registration-form/user-registration-form.component';
-import { UserLoginFormComponent } from './user-login-form/user-login-form.component';
+import { AuthService } from './auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    RouterOutlet,
-    MatDialogModule,
-    MatCardModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-  ],
+  imports: [CommonModule, RouterModule, MatToolbarModule, MatButtonModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'myFlix-Angular-client';
+  isLoggedIn$: Observable<boolean>; // Change to observable
 
-  constructor(public dialog: MatDialog) {}
-
-  // SignIn
-  openUserRegistrationDialog(): void {
-    this.dialog.open(UserRegistrationFormComponent, {
-      width: '280px', // Dialog width
-    });
+  constructor(private authService: AuthService, private router: Router) {
+    this.isLoggedIn$ = this.authService.isLoggedIn$; // Assign the observable
   }
 
-  // Login
-  openUserLoginDialog(): void {
-    this.dialog.open(UserLoginFormComponent, {
-      width: '280px',
-    });
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/welcome']);
   }
 }

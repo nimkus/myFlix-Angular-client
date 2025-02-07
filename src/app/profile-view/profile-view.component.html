@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<mat-card class="profile-card">
+  <h2>{{ user()?.username }}</h2>
+
+  <form [formGroup]="form" *ngIf="isEditing(); else viewMode">
+    <mat-form-field>
+      <mat-label>Username</mat-label>
+      <input matInput formControlName="username" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Birthday</mat-label>
+      <input
+        matInput
+        type="date"
+        formControlName="birthday"
+        [value]="getFormattedDate(user()?.birthday, 'input')"
+      />
+    </mat-form-field>
+
+    <button
+      mat-button
+      style="margin-bottom: 8px"
+      (click)="togglePasswordFields()"
+    >
+      Change Password
+    </button>
+
+    <div *ngIf="showPasswordFields()">
+      <mat-form-field>
+        <mat-label>Current Password</mat-label>
+        <input matInput type="password" formControlName="currentPassword" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>New Password</mat-label>
+        <input matInput type="password" formControlName="newPassword" />
+      </mat-form-field>
+    </div>
+    <div class="profile-actions">
+      <button mat-raised-button color="primary" (click)="saveProfile()">
+        Save
+      </button>
+      <button mat-button (click)="toggleEditing()">Cancel</button>
+    </div>
+  </form>
+
+  <ng-template #viewMode>
+    <p>Email: {{ user()?.email }}</p>
+    <p>Birthday: {{ getFormattedDate(user()?.birthday, "display") }}</p>
+
+    <div class="profile-actions">
+      <button mat-raised-button color="primary" (click)="toggleEditing()">
+        Edit
+      </button>
+      <button mat-button color="warn" (click)="deleteProfile()">
+        Delete Profile
+      </button>
+    </div>
+  </ng-template>
+</mat-card>
+
+<mat-card class="fav-movies-card">
+  <h3>Favorite Movies</h3>
+  <div *ngIf="favMovies().length > 0; else noMovies">
+    <ul>
+      <li *ngFor="let movie of favMovies()">{{ movie.title }}</li>
+    </ul>
+  </div>
+
+  <ng-template #noMovies>
+    <p>No favorite movies yet.</p>
+  </ng-template>
+</mat-card>

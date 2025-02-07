@@ -16,6 +16,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 
 import { FetchApiDataService } from '../fetch-api-data.service';
+import { Router } from '@angular/router';
+import { AuthService } from '../auth.service'; // Import AuthService
 
 @Component({
   selector: 'app-user-login-form',
@@ -40,6 +42,8 @@ export class UserLoginFormComponent {
   private dialogRef = inject(MatDialogRef<UserLoginFormComponent>);
   private snackBar = inject(MatSnackBar);
   private fb = inject(FormBuilder);
+  private router = inject(Router);
+  private authService = inject(AuthService); // Inject AuthService
 
   constructor() {
     this.loginForm = this.fb.group({
@@ -62,11 +66,13 @@ export class UserLoginFormComponent {
 
     this.fetchApiData.userLogin(this.loginForm.value).subscribe({
       next: (result) => {
-        localStorage.setItem('token', result.token);
-        localStorage.setItem('user', JSON.stringify(result.user));
+        const { token, user } = result;
+
+        // Store login info via AuthService
+        this.authService.login(user.username, token);
 
         this.snackBar.open(
-          `✅ Login successful! Welcome, ${result.user.username}!`,
+          `✅ Login successful! Welcome, ${user.username}!`,
           'OK',
           {
             duration: 4000,
@@ -74,6 +80,7 @@ export class UserLoginFormComponent {
         );
 
         this.dialogRef.close(); // Close the login modal
+        this.router.navigate(['movies']);
       },
       error: (err) => {
         let errorMessage = 'Invalid username or password. Please try again.';

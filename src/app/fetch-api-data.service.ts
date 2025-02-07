@@ -64,28 +64,16 @@ export class FetchApiDataService {
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
-  // Get all actors (requires authentication)
-  public getAllActors(): Observable<any> {
-    return this.http
-      .get(apiUrl + 'movies/actors/all', { headers: this.getAuthHeaders() })
-      .pipe(map(this.extractResponseData), catchError(this.handleError));
-  }
-
-  // Get an actor by name (requires authentication)
-  public getActor(name: string): Observable<any> {
-    return this.http
-      .get(`${apiUrl}movies/actors/${name}`, { headers: this.getAuthHeaders() })
-      .pipe(map(this.extractResponseData), catchError(this.handleError));
-  }
-
   /** ******************************
    * USER ENDPOINTS
    ****************************** **/
 
   // Get all users (requires authentication)
-  public getAllUsers(): Observable<any> {
+  public getUserInfo(username: string): Observable<any> {
     return this.http
-      .get(apiUrl + 'users', { headers: this.getAuthHeaders() })
+      .get(`${apiUrl}users/${username}`, {
+        headers: this.getAuthHeaders(),
+      })
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
@@ -134,8 +122,11 @@ export class FetchApiDataService {
     return this.http
       .put(
         `${apiUrl}users/${username}/${movieId}`,
-        {},
-        { headers: this.getAuthHeaders() }
+        {}, // No request body needed
+        {
+          headers: this.getAuthHeaders(),
+          responseType: 'text' as 'json',
+        }
       )
       .pipe(catchError(this.handleError));
   }

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<div class="movie-card-container">
+  <mat-card *ngFor="let movie of moviesList()" class="movie-card">
+    <img [src]="movie.imagePath" [alt]="movie.title" />
+    <mat-card-header>
+      <mat-card-title style="font-weight: bold">
+        {{ movie.title }}
+      </mat-card-title>
+      <mat-card-subtitle
+        >Directed by: {{ movie.director.name }}</mat-card-subtitle
+      >
+    </mat-card-header>
+
+    <mat-card-actions>
+      <div class="movie-card-buttons">
+        <button mat-button>Genre</button>
+        <button mat-button>Director</button>
+        <button mat-button>Synopsis</button>
+      </div>
+      <!-- Heart Icon for Favorite -->
+      <mat-icon
+        color="primary"
+        (click)="toggleFavorite(movie._id)"
+        class="favorite-icon"
+        [ngClass]="{ favorite: isFavorite(movie._id) }"
+      >
+        {{ isFavorite(movie._id) ? "favorite" : "favorite_border" }}
+      </mat-icon>
+    </mat-card-actions>
+  </mat-card>
+</div>
