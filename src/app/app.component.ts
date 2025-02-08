@@ -14,6 +14,8 @@ import { Observable } from 'rxjs';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+  title = 'myFlix-Angular-client';
+
   isLoggedIn$: Observable<boolean>; // Change to observable
 
   constructor(private authService: AuthService, private router: Router) {
