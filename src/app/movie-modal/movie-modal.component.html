@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<h2 mat-dialog-title class="modal-title">
+  <strong>{{ data.type }} Information</strong>
+</h2>
+
+<mat-dialog-content class="modal-content">
+  <!-- If it's a Director, loop over details array -->
+  <ng-container *ngIf="data.type === 'Director'">
+    <div *ngFor="let director of data.details" class="info-card">
+      <p class="info-title">
+        <strong>Name</strong><br />
+        {{ director.name }}
+      </p>
+      <p>
+        <strong>Bio</strong><br />
+        {{ director.bio }}
+      </p>
+      <p *ngIf="director.date_of_birth">
+        <strong>Born:</strong> {{ director.date_of_birth | date : "longDate" }}
+      </p>
+      <p *ngIf="director.date_of_death">
+        <strong>Died:</strong> {{ director.date_of_death | date : "longDate" }}
+      </p>
+    </div>
+  </ng-container>
+
+  <!-- If it's a Genre, loop over details array -->
+  <ng-container *ngIf="data.type === 'Genre'">
+    <div *ngFor="let genre of data.details" class="info-card">
+      <h3 class="info-title">
+        <strong>{{ genre.name }}</strong>
+      </h3>
+      <p>
+        <strong>Description</strong><br />
+        {{ genre.description }}
+      </p>
+    </div>
+  </ng-container>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="modal-actions">
+  <button mat-button class="close-btn" (click)="closeModal()">Close</button>
+</mat-dialog-actions>

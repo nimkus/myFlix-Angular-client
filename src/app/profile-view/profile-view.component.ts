@@ -12,7 +12,10 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+
+// Components
 import { FetchApiDataService } from '../fetch-api-data.service';
+import { MovieCardComponent } from '../movie-card/movie-card.component';
 
 @Component({
   selector: 'app-profile-view',
@@ -25,6 +28,7 @@ import { FetchApiDataService } from '../fetch-api-data.service';
     MatIconModule,
     MatSnackBarModule,
     ReactiveFormsModule,
+    MovieCardComponent,
   ],
   templateUrl: './profile-view.component.html',
   styleUrls: ['./profile-view.component.scss'],
@@ -36,14 +40,15 @@ export class ProfileViewComponent {
   private snackBar = inject(MatSnackBar);
 
   user = signal<any>(null);
-  favMovies = signal<any[]>([]);
   isEditing = signal<boolean>(false);
   showPasswordFields = signal<boolean>(false);
   form!: FormGroup;
 
+  // Store for user's favorite movies
+  favoriteMoviesSignal = signal<string[]>([]);
+
   constructor() {
     this.loadUserData();
-    this.loadFavoriteMovies();
 
     this.form = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(5)]],
@@ -61,6 +66,9 @@ export class ProfileViewComponent {
     });
   }
 
+  /**
+   * Format date
+   */
   getFormattedDate(
     date: string | null,
     format: 'display' | 'input' = 'display'
@@ -79,6 +87,9 @@ export class ProfileViewComponent {
         )}-${String(d.getDate()).padStart(2, '0')}`;
   }
 
+  /**
+   * Toggel between the editable and non-editable view of profile information
+   */
   toggleEditing() {
     if (this.isEditing()) {
       this.loadUserData();
@@ -111,7 +122,6 @@ export class ProfileViewComponent {
       updateData.currentPassword = this.form.value.currentPassword;
       updateData.newPassword = this.form.value.newPassword;
     }
-    console.log('Save:updatedUser: ', updateData);
 
     this.apiService.updateUser(storedUsername, updateData).subscribe(
       (res: any) => {
@@ -158,6 +168,12 @@ export class ProfileViewComponent {
     );
   }
 
+  /**
+   * Load user data from the API to populate profile view
+   * @param username: string
+   * @returns void
+   *
+   */
   loadUserData() {
     const storedUsername = localStorage.getItem('username');
     if (!storedUsername) return;
@@ -173,26 +189,14 @@ export class ProfileViewComponent {
           email: res.email,
           birthday: this.getFormattedDate(res.birthday, 'input'),
         });
+
+        this.favoriteMoviesSignal.set(res.favMovies);
       },
       (error) => {
         console.error('Error fetching user data:', error);
         this.snackBar.open('Error fetching user data.', 'Close', {
           duration: 3000,
         });
-      }
-    );
-  }
-
-  loadFavoriteMovies() {
-    const storedUsername = localStorage.getItem('username');
-    if (!storedUsername) return;
-
-    this.apiService.getUserInfo(storedUsername).subscribe(
-      (res: any) => {
-        this.favMovies.set(res.favMovies || []);
-      },
-      (error) => {
-        console.error('Error fetching favorite movies:', error);
       }
     );
   }

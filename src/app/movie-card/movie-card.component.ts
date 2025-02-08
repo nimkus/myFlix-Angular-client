@@ -1,12 +1,15 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { FetchApiDataService } from '../fetch-api-data.service';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs'; // Needed to handle errors gracefully
+
+import { MovieModalComponent } from '../movie-modal/movie-modal.component';
 
 @Component({
   selector: 'app-movie-card',
@@ -20,11 +23,34 @@ export class MovieCardComponent {
   private moviesSignal = signal<any[]>([]); // Signal for movies
   private favoriteMoviesSignal = signal<string[]>([]); // Signal for user's favorite movie IDs
 
-  // Computed property for movies list
-  moviesList = computed(() => this.moviesSignal());
-  dialog: any;
+  // Input to determine if movie card is rendered on profile view
+  @Input() isProfileView: boolean | undefined;
 
-  constructor(private snackBar: MatSnackBar) {
+  // Computed property for movies list
+  moviesList = computed(() =>
+    this.moviesSignal().map(
+      (movie: {
+        _id: string;
+        title: string;
+        imagePath: string;
+        genre?: { name: string }[];
+        director?: { name: string }[];
+      }) => ({
+        ...movie, // ✅ Keep all original movie properties (including `_id`)
+        genreNames:
+          movie.genre && movie.genre.length > 0
+            ? movie.genre.map((g: { name: string }) => g.name).join(', ')
+            : 'No genre available',
+
+        directorNames:
+          movie.director && movie.director.length > 0
+            ? movie.director.map((d: { name: string }) => d.name).join(', ')
+            : 'No director available',
+      })
+    )
+  );
+
+  constructor(private snackBar: MatSnackBar, private dialog: MatDialog) {
     this.getMovies();
     this.getFavoriteMovies();
   }
@@ -34,9 +60,9 @@ export class MovieCardComponent {
    */
   private showSnackbar(message: string): void {
     this.snackBar.open(message, 'Close', {
-      duration: 3000, // Auto close after 3 seconds
-      verticalPosition: 'top', // Position at the top
-      horizontalPosition: 'center', // Center horizontally
+      duration: 3000,
+      verticalPosition: 'bottom',
+      horizontalPosition: 'center',
     });
   }
 
@@ -93,6 +119,16 @@ export class MovieCardComponent {
   isFavorite(movieId: string): boolean {
     return this.favoriteMoviesSignal().includes(movieId);
   }
+
+  /**
+   * Filter movies based on `isProfileView`
+   */
+  favMoviesList = computed(
+    () =>
+      this.isProfileView
+        ? this.moviesSignal().filter((movie) => this.isFavorite(movie._id)) // ✅ Only favorites
+        : this.moviesSignal() // ✅ Show all movies in other views
+  );
 
   /**
    * Toggle favorite movie with error handling
@@ -155,21 +191,36 @@ export class MovieCardComponent {
   }
 
   /**
-   * Open Director or Genre modal
+   * Open Director modal
    */
-  openDirectorModal(directorName: string): void {
-    this.fetchApiData.getDirector(directorName).subscribe((director) => {
-      this.dialog.open(MovieModalComponent, {
-        data: { type: 'Director', details: director },
-      });
+  openDirectorModal(directors: any[]): void {
+    if (!directors || directors.length === 0) {
+      this.showSnackbar('No director information available.');
+      return;
+    }
+
+    this.dialog.open(MovieModalComponent, {
+      data: {
+        type: 'Director',
+        details: directors, // Pass full director object(s)
+      },
     });
   }
 
-  openGenreModal(genreName: string): void {
-    this.fetchApiData.getMoviesByGenre(genreName).subscribe((genre) => {
-      this.dialog.open(MovieModalComponent, {
-        data: { type: 'Genre', details: genre },
-      });
+  /**
+   * Open Genre modal
+   */
+  openGenreModal(genres: any[]): void {
+    if (!genres || genres.length === 0) {
+      this.showSnackbar('No genre information available.');
+      return;
+    }
+
+    this.dialog.open(MovieModalComponent, {
+      data: {
+        type: 'Genre',
+        details: genres, // Pass full genre object(s)
+      },
     });
   }
 }

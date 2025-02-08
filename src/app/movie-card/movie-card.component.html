@@ -1,29 +1,66 @@
 <!DOCTYPE html>
 
-<div class="movie-card-container">
+<!-- Movie card component, movies page -->
+<div class="movie-card-container" *ngIf="!isProfileView">
   <mat-card *ngFor="let movie of moviesList()" class="movie-card">
     <img [src]="movie.imagePath" [alt]="movie.title" />
     <mat-card-header>
       <mat-card-title style="font-weight: bold">
         {{ movie.title }}
       </mat-card-title>
-      <mat-card-subtitle
-        >Directed by: {{ movie.director.name }}</mat-card-subtitle
-      >
+      <mat-card-subtitle>
+        Directed by:
+        <span
+          class="clickable-text"
+          (click)="openDirectorModal(movie.director ?? [])"
+        >
+          {{ movie.directorNames }}
+        </span>
+      </mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-actions>
       <div class="movie-card-buttons">
-        <button mat-button>Genre</button>
-        <button mat-button>Director</button>
-        <button mat-button>Synopsis</button>
+        <button mat-button (click)="openGenreModal(movie.genre ?? [])">
+          Genre
+        </button>
+        <button mat-button (click)="openDirectorModal(movie.director ?? [])">
+          Director
+        </button>
       </div>
-      <!-- Heart Icon for Favorite -->
       <mat-icon
         color="primary"
         (click)="toggleFavorite(movie._id)"
         class="favorite-icon"
         [ngClass]="{ favorite: isFavorite(movie._id) }"
+      >
+        {{ isFavorite(movie._id) ? "favorite" : "favorite_border" }}
+      </mat-icon>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<!-- Simplified movie card component, user profile (only favorite movies) -->
+<div
+  class="movie-card-container"
+  *ngIf="isProfileView"
+  style="margin-top: 10px"
+>
+  <mat-card *ngFor="let movie of favMoviesList()" class="movie-card">
+    <img [src]="movie.imagePath" [alt]="movie.title" />
+    <mat-card-header>
+      <mat-card-title style="font-weight: bold">
+        {{ movie.title }}
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-actions>
+      <mat-icon
+        color="primary"
+        (click)="toggleFavorite(movie._id)"
+        class="favorite-icon"
+        [ngClass]="{ favorite: isFavorite(movie._id) }"
+        style="margin: 0 auto"
       >
         {{ isFavorite(movie._id) ? "favorite" : "favorite_border" }}
       </mat-icon>

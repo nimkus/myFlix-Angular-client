@@ -68,13 +68,7 @@
 
 <mat-card class="fav-movies-card">
   <h3>Favorite Movies</h3>
-  <div *ngIf="favMovies().length > 0; else noMovies">
-    <ul>
-      <li *ngFor="let movie of favMovies()">{{ movie.title }}</li>
-    </ul>
+  <div class="movie-card-container">
+    <app-movie-card [isProfileView]="true"> </app-movie-card>
   </div>
-
-  <ng-template #noMovies>
-    <p>No favorite movies yet.</p>
-  </ng-template>
 </mat-card>

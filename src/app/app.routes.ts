@@ -5,8 +5,18 @@ import { WelcomeScreenComponent } from './welcome-screen/welcome-screen.componen
 import { MovieCardComponent } from './movie-card/movie-card.component';
 import { ProfileViewComponent } from './profile-view/profile-view.component';
 
+// Check login status
+const isLoggedIn = () => {
+  return localStorage.getItem('username') && localStorage.getItem('token');
+};
+
 // Define the routes
 export const routes: Routes = [
+  {
+    path: '',
+    redirectTo: isLoggedIn() ? '/movies' : '/welcome',
+    pathMatch: 'full',
+  },
   { path: 'welcome', component: WelcomeScreenComponent },
   { path: 'movies', component: MovieCardComponent },
   { path: 'profile', component: ProfileViewComponent },

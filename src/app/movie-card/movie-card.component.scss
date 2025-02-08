@@ -20,6 +20,14 @@
     border-radius: 5%;
   }
 
+  mat-card-title {
+    margin-bottom: 10px;
+  }
+
+  mat-card-subtitle {
+    color: #616161;
+  }
+
   mat-card-actions {
     display: flex;
     align-items: center;
@@ -27,6 +35,13 @@
 
     mat-icon {
       margin-right: 5px;
+      color: rgb(125, 0, 250);
+      transition: fill 0.3s ease-in-out, color 0.3s ease-in-out;
+
+      &:hover {
+        color: black;
+        opacity: 0.8;
+      }
     }
   }
 }
