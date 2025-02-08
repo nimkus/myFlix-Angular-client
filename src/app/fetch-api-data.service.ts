@@ -20,10 +20,10 @@ export class FetchApiDataService {
    * MOVIE ENDPOINTS
    ****************************** **/
 
-  // Get all movies (requires authentication)
-  public getAllMovies(): Observable<any> {
+  // Get all movies with a limit (requires authentication)
+  public getAllMovies(limit = 100): Observable<any> {
     return this.http
-      .get(apiUrl + 'movies', { headers: this.getAuthHeaders() })
+      .get(apiUrl + `movies?limit=${limit}`, { headers: this.getAuthHeaders() })
       .pipe(map(this.extractResponseData), catchError(this.handleError));
   }
 
