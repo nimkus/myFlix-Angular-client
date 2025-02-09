@@ -22,6 +22,12 @@ export class AppComponent {
     this.isLoggedIn$ = this.authService.isLoggedIn$; // Assign the observable
   }
 
+  menuOpen = false;
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/welcome']);

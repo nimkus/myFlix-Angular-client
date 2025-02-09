@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <mat-toolbar *ngIf="isLoggedIn$ | async" color="primary" class="navbar">
   <span class="logo">🐰 Bunbuster</span>
 
@@ -7,7 +9,9 @@
 
   <span class="spacer"></span>
 
-  <nav class="nav-links">
+  <button class="menu-toggle" (click)="toggleMenu()">☰</button>
+
+  <nav class="nav-links" [class.active]="menuOpen">
     <button mat-button [routerLink]="'/movies'">Movies</button>
     <button mat-button [routerLink]="'/profile'">Profile</button>
     <button mat-flat-button (click)="logout()">Logout</button>

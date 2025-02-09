@@ -1,6 +1,7 @@
 .navbar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 16px;
   height: 64px;
 }
@@ -25,4 +26,46 @@
 .nav-links {
   display: flex;
   gap: 8px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .subtitle {
+    display: none;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .nav-links.active {
+    display: block;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    background: var(--mat-sys-surface);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 12px 16px;
+    text-align: center;
+    z-index: 1000; /* Ensures it's above other content */
+
+    button {
+      margin: 0 5px;
+    }
+  }
+
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+}
+
+@media (min-width: 769px) {
+  .menu-toggle {
+    display: none;
+  }
 }

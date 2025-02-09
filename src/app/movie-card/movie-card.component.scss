@@ -44,7 +44,12 @@
       }
     }
   }
-@media all and (max-width: 479px) {
-  max-width: 90vw;
 }
+
+@media (max-width: 500px) {
+  .movie-card-container {
+    max-width: 80vw;
+    margin: 20px auto;
+    gap: 30px;
+  }
 }
