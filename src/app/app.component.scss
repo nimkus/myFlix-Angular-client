@@ -23,6 +23,12 @@
   flex: 1;
 }
 
+.menu-toggle {
+  color: var(--mat-sys-on-surface);
+  margin: 0;
+  padding: 5px;
+}
+
 .nav-links {
   display: flex;
   gap: 8px;
