@@ -46,7 +46,11 @@
   *ngIf="isProfileView"
   style="margin-top: 10px"
 >
-  <mat-card *ngFor="let movie of favMoviesList()" class="movie-card">
+  <mat-card
+    *ngFor="let movie of favMoviesList()"
+    class="movie-card"
+    style="background-color: #f5f5f5"
+  >
     <img [src]="movie.imagePath" [alt]="movie.title" />
     <mat-card-header>
       <mat-card-title style="font-weight: bold">
